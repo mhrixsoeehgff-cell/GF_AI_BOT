@@ -1,6 +1,6 @@
 # ============================================================
 # AI Girlfriend Bot — তৃষা 💕
-# Vercel Python Serverless — api/index.py (Final with Gemma 4)
+# Vercel Python (app.py) - Final Fixed
 # ============================================================
 
 import os
@@ -13,15 +13,13 @@ load_dotenv()
 
 OPENROUTER_API_KEY = os.getenv("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")
 TELEGRAM_TOKEN = os.getenv("8944818423:AAGrSRvgU_YZsejii38vDhPTR-_M6V89TlI")
-BOT_USERNAME = os.getenv("BOT_USERNAME", "@Gfrixor_bot").lower()
+BOT_USERNAME = os.getenv("@Gfrixor_bot", "").lower()
 
-# এখানে সরাসরি মডেল বসানো হলো, Environment Variable লাগবে না
 MODEL = "google/gemma-4-31b-it:free"
 
 app = Flask(__name__)
 TELEGRAM_API = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}"
 
-# ---------- In-memory মেমোরি ----------
 CHAT_HISTORY = {}
 MAX_HISTORY = 10
 MOOD_KEYS = ["romantic", "shy", "playful", "missing_you", "slightly_upset", "caring"]
@@ -67,7 +65,7 @@ def ask_girlfriend(chat_id, user_message, user_name="তুমি"):
         "Content-Type": "application/json",
     }
     payload = {
-        "model": MODEL,  # এখানে Gemma 4 মডেল বসানো আছে
+        "model": MODEL,
         "messages": messages,
         "max_tokens": 250,
         "temperature": 0.95,
@@ -146,3 +144,6 @@ def webhook():
     except Exception as e:
         print("Webhook error:", e, flush=True)
         return jsonify({"ok": True})
+
+# Vercel-এর জন্য অ্যাপটি এক্সপোর্ট করা হলো
+handler = app
